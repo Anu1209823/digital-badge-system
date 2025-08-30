@@ -87,6 +87,48 @@
       ],
       "image": "assets/badges/sample.png",
       "verifyUrl": "https://anu1209823.github.io/digital-badge-system/site/#id=eddd0a20-27a6-46df-a211-0336a655ba41"
+    },
+    {
+      "id": "aa2dd340-b9b9-409c-99ed-e94f0b81b62a",
+      "name": "BugBox – Certified Badge",
+      "description": "Completed BugBox badge design.",
+      "recipient": {
+        "name": "Anu",
+        "email": "anu@example.com"
+      },
+      "issuer": {
+        "name": "Your Team / University",
+        "website": "https://example.edu/badges"
+      },
+      "issuedOn": "2025-08-30T15:33:54.625581+00:00",
+      "skills": [
+        "Figma",
+        "Colour theory",
+        "BugBox style"
+      ],
+      "image": "assets/badges/sample.png",
+      "verifyUrl": "https://anu1209823.github.io/digital-badge-system/site/#id=aa2dd340-b9b9-409c-99ed-e94f0b81b62a"
+    },
+    {
+      "id": "30265342-223b-4bde-a229-3eba9c91d3d9",
+      "name": "BugBox – Certified Badge",
+      "description": "Completed BugBox badge design.",
+      "recipient": {
+        "name": "YGFJUH",
+        "email": "aHGGJ@example.com"
+      },
+      "issuer": {
+        "name": "Your Team / University",
+        "website": "https://example.edu/badges"
+      },
+      "issuedOn": "2025-08-30T15:35:35.980687+00:00",
+      "skills": [
+        "Figma",
+        "Colour theory",
+        "BugBox style"
+      ],
+      "image": "assets/badges/sample.png",
+      "verifyUrl": "https://anu1209823.github.io/digital-badge-system/site/#id=30265342-223b-4bde-a229-3eba9c91d3d9"
     }
   ]
 }
