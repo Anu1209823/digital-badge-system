@@ -1,0 +1,47 @@
+/* === BugBox HTML-only badge === */
+:root{
+  --bb-primary:#FF5412;  /* BugBox orange */
+  --bb-secondary:#12BDFF;/* BugBox blue   */
+  --bb-ink:#0e1a2b; --bb-ink2:#374357;
+  --bb-cream:#F7EFE5; --bb-cream-stroke:#EADFCF;
+  --bb-deep:#0F3B63;
+}
+
+.bb-badge-wrap{ width:520px; margin:16px auto; filter:drop-shadow(0 18px 45px rgba(0,0,0,.12)); }
+.bb-pentagon{ position:relative; width:100%; padding-top:120%;
+  background:var(--bb-primary);
+  clip-path:polygon(50% 0%, 95% 28%, 78% 92%, 22% 92%, 5% 28%);
+  border-radius:14px;
+}
+.bb-pill{ position:absolute; left:50%; top:8%; transform:translateX(-50%);
+  background:var(--bb-secondary); color:#fff; font-weight:800; font-size:24px; letter-spacing:1.2px;
+  padding:14px 28px; border-radius:16px;
+}
+.bb-circle{ position:absolute; left:50%; top:36%; width:66%; aspect-ratio:1;
+  transform:translate(-50%,-50%); background:var(--bb-deep);
+  border-radius:50%; box-shadow: inset 0 0 0 16px rgba(255,255,255,.06);
+}
+.bb-circle::after{ content:""; position:absolute; inset:8%; border-radius:50%;
+  box-shadow: inset 0 0 0 10px rgba(255,255,255,.08);
+}
+.bb-arc{ position:absolute; inset:0; pointer-events:none; }
+.bb-arc span{ position:absolute; left:50%; top:50%; transform-origin:0 0; color:#fff; font-weight:800; }
+.bb-arc.top span{ font-size:28px; letter-spacing:2px; }
+.bb-arc.bottom span{ font-size:20px; letter-spacing:2px; }
+
+.bb-emblem{ position:absolute; left:50%; top:50%; transform:translate(-50%,-36%);
+  width:84px; height:84px; background:var(--bb-primary); border-radius:22px;
+  box-shadow:0 0 0 10px rgba(255,255,255,.08);
+}
+
+.bb-plaque{ position:absolute; left:50%; bottom:6%; transform:translateX(-50%);
+  width:78%; background:var(--bb-cream); border:4px solid var(--bb-cream-stroke);
+  border-radius:16px; padding:16px 18px; text-align:center;
+}
+.bb-name{ font-weight:800; font-size:22px; color:var(--bb-ink); }
+.bb-divider{ height:0; border-top:3px solid #B44720; width:72%; margin:10px auto; }
+.bb-project{ font-weight:700; font-size:14px; color:var(--bb-ink2); letter-spacing:.3px; }
+.bb-date{ font-weight:700; font-size:16px; color:var(--bb-ink); letter-spacing:.8px; margin-top:6px; }
+
+.bb-actions{ display:flex; gap:8px; justify-content:center; margin-top:10px; }
+.bb-actions button{ border:1px solid #222; background:#222; color:#fff; border-radius:10px; padding:8px 12px; cursor:pointer; }

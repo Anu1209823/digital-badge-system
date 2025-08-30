@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Badge Registry & Verification</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Badge Registry & Verification</h1>
+    <p>Paste a Badge ID or search by name/email. You can also open a direct link like <code>#id=BADGE_UUID</code>.</p>
+  </header>
+
+  <main class="container">
+    <section class="search-card">
+      <input id="q" placeholder="Search by Badge ID, Recipient name, or Email" />
+      <button id="btnSearch">Search</button>
+    </section>
+
+    <section id="result"></section>
+
+    <section class="help">
+      <h2>How to share verification</h2>
+      <ol>
+        <li>Copy the Verification Link shown on an issued badge (it looks like: <code>.../site/#id=&lt;uuid&gt;</code>).</li>
+        <li>Send that link to anyone. They can open it to view the badge in this registry.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="container small">
+    <p>© <span id="year"></span> Your Team • <a href="../registry/registry.json">Public registry JSON</a></p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+  <script src="verify.js"></script>
+</body>
+</html>

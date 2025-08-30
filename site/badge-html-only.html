@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BugBox Badge (HTML + CSS + JS only)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#FF5412;    /* BugBox Orange */
+    --secondary:#12BDFF;  /* BugBox Blue   */
+    --ink:#0e1a2b;
+    --ink-2:#374357;
+    --cream:#F7EFE5;
+    --cream-stroke:#EADFCF;
+    --deep:#0F3B63;
+    --deep-2:#124B82;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; padding:24px;
+    font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+    background:#fafafa; color:var(--ink);
+    display:flex; align-items:center; justify-content:center; min-height:100vh;
+  }
+  .badge-wrap{
+    width: 520px; /* scale by changing this width */
+    position: relative;
+    filter: drop-shadow(0 18px 45px rgba(0,0,0,.12));
+  }
+
+  /* Pentagon shell via clip-path */
+  .pentagon{
+    position: relative;
+    width: 100%; padding-top: 120%; /* aspect */
+    background: var(--primary);
+    clip-path: polygon(50% 0%, 95% 28%, 78% 92%, 22% 92%, 5% 28%);
+    border-radius: 54px; /* softens corners a bit */
+  }
+
+  /* Circular face */
+  .circle{
+    position:absolute; left:50%; top:36%;
+    width:66%; aspect-ratio:1/1;
+    transform: translate(-50%,-50%);
+    background: var(--deep);
+    border-radius:50%;
+    box-shadow: inset 0 0 0 16px rgba(255,255,255,.06);
+  }
+  .circle::after{ /* subtle inner ring */
+    content:""; position:absolute; inset:8%; border-radius:50%;
+    box-shadow: inset 0 0 0 10px rgba(255,255,255,.08);
+  }
+
+  
+
+  /* Arc text containers (we place letters with JS) */
+  .arc{
+    position:absolute; inset:0; pointer-events:none;
+  }
+  .arc span{
+    position:absolute; left:50%; top:50%;
+    transform-origin: 0 0; color:#fff;
+    font-weight:800;
+  }
+  .arc.top span{ font-size:28px; letter-spacing:2px; }
+  .arc.bottom span{ font-size:20px; letter-spacing:2px; }
+
+  /* Center emblem (simple geometric mark with only CSS) */
+  .emblem{
+    position:absolute; left:50%; top:50%;
+    transform: translate(-50%,-36%);
+    width: 84px; height: 84px; background: var(--primary); border-radius: 22px;
+    box-shadow: 0 0 0 10px rgba(255,255,255,.08);
+  }
+  .emblem::before{
+    content:""; position:absolute; inset:12px 36px; background:#fff; opacity:.0; /* decorative placeholder */
+  }
+
+  /* Plaque */
+  .plaque{
+    position:absolute; left:50%; bottom:6%;
+    transform: translateX(-50%);
+    width:78%; background: var(--cream);
+    border:4px solid var(--cream-stroke);
+    border-radius:16px; padding:16px 18px;
+    text-align:center;
+  }
+  .name{ font-weight:800; font-size:22px; color:var(--ink); }
+  .divider{ height:0; border-top:3px solid #B44720; width:72%; margin:10px auto; }
+  .project{ font-weight:700; font-size:14px; color:var(--ink-2); letter-spacing:.3px; }
+  .date{ font-weight:700; font-size:16px; color:var(--ink); letter-spacing:.8px; margin-top:6px;}
+
+  /* Controls (optional) */
+  .panel{
+    position: fixed; right: 20px; top: 20px; width: 280px;
+    background:#fff; border:1px solid #e8ecf2; border-radius:12px; padding:12px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+    display:grid; gap:8px;
+  }
+  .panel h3{ margin:4px 0 6px 0; font-size:14px; color:#58657a; font-weight:700; }
+  .panel label{ font-size:12px; color:#6b778c; }
+  .panel input{
+    width:100%; padding:8px 10px; border:1px solid #d9e1ea; border-radius:10px;
+    font: 600 14px/1.2 "Montserrat", sans-serif;
+  }
+  .panel button{
+    background: var(--primary); color:#fff; border:1px solid var(--primary);
+    padding:10px 12px; border-radius:10px; font-weight:700; cursor:pointer;
+  }
+  @media (max-width: 900px){ .panel{ position:static; width:auto; margin-top:18px; } body{ flex-direction:column; } }
+</style>
+</head>
+<body>
+
+  <!-- Badge -->
+  <div class="badge-wrap" id="badge">
+    <div class="pentagon">
+      <div class="pill">BUGBOX</div>
+
+      <div class="circle" id="circle">
+        <div class="arc top" id="arcTop"></div>
+        <div class="arc bottom" id="arcBottom"></div>
+        <div class="emblem"></div>
+      </div>
+
+      <div class="plaque">
+        <div class="name" id="name">ALICE STUDENT</div>
+        <div class="divider"></div>
+        <div class="project" id="project">BUGBOX — CERTIFIED BADGE</div>
+        <div class="date" id="date">AUGUST 25, 2025</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional controls (edit live & export) -->
+  <div class="panel">
+    <h3>Badge Details</h3>
+    <label>Recipient</label>
+    <input id="inName" value="ALICE STUDENT">
+    <label>Project</label>
+    <input id="inProject" value="BUGBOX — CERTIFIED BADGE">
+    <label>Date</label>
+    <input id="inDate" value="AUGUST 25, 2025">
+    <button id="btnExport">Download PNG</button>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+  // ===== Curved text renderer (pure JS — no SVG) =====
+  function renderArc(el, text, radius, startDeg, endDeg, clockwise=true){
+    el.innerHTML = "";
+    const cx = el.offsetWidth/2, cy = el.offsetHeight/2;
+    const chars = Array.from(text);
+    const total = chars.length;
+    const start = startDeg * Math.PI/180;
+    const end   = endDeg   * Math.PI/180;
+    const step  = (end - start) / Math.max(total-1,1);
+
+    for(let i=0;i<total;i++){
+      const angle = start + step*i;
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+
+      const span = document.createElement("span");
+      span.textContent = chars[i];
+      // rotate so letters stand upright along the arc
+      const rot = angle + Math.PI/2;
+      span.style.transform = `translate(${x}px, ${y}px) rotate(${rot}rad) translate(-50%,-50%)`;
+      el.appendChild(span);
+    }
+  }
+
+  function drawArcs(){
+    const circle = document.getElementById('circle');
+    const box = circle.getBoundingClientRect();
+    const size = Math.min(box.width, box.height);
+    const rTop = size*0.40;
+    const rBot = size*0.40;
+
+    renderArc(document.getElementById('arcTop'),    "BUGBOX",          rTop, -160, -20, true);
+    renderArc(document.getElementById('arcBottom'), "CERTIFIED BADGE", rBot,  200,  340, true);
+  }
+
+  // on load and on resize
+  window.addEventListener('load', drawArcs);
+  window.addEventListener('resize', drawArcs);
+
+  // Live edits
+  const byId = id => document.getElementById(id);
+  byId('inName').addEventListener('input', e => byId('name').textContent = e.target.value.toUpperCase());
+  byId('inProject').addEventListener('input', e => byId('project').textContent = e.target.value.toUpperCase());
+  byId('inDate').addEventListener('input', e => byId('date').textContent = e.target.value.toUpperCase());
+
+  // Export PNG (DOM → canvas)
+  byId('btnExport').addEventListener('click', async () => {
+    const node = byId('badge');
+    const canvas = await html2canvas(node, {backgroundColor: null, scale: 2});
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url; a.download = 'bugbox-badge.png'; a.click();
+  });
+</script>
+</body>
+</html>

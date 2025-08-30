@@ -1,0 +1,21 @@
+{
+  "id": "9616d8a6-4353-476e-889e-f6ccb0ac9d2c",
+  "name": "BugBox – Bronze",
+  "description": "Completed initial BugBox badge design.",
+  "recipient": {
+    "name": "Alice Student",
+    "email": "alice@example.com"
+  },
+  "issuer": {
+    "name": "Your Team / University",
+    "website": "https://example.edu/badges"
+  },
+  "issuedOn": "2025-08-25T10:20:18.660767+00:00",
+  "skills": [
+    "Figma",
+    "Colour theory",
+    "BugBox style"
+  ],
+  "image": "assets\\badges\\sample.png",
+  "verifyUrl": "http://localhost:8000/site/#id=9616d8a6-4353-476e-889e-f6ccb0ac9d2c"
+}

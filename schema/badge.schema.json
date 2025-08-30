@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SimpleBadge",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "recipient",
+    "issuedOn",
+    "issuer",
+    "skills",
+    "image",
+    "verifyUrl"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique badge id (UUID v4 recommended)"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "recipient": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "issuer": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        }
+      }
+    },
+    "issuedOn": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "image": {
+      "type": "string",
+      "description": "Relative path to badge image (PNG/SVG)"
+    },
+    "evidenceUrl": {
+      "type": "string",
+      "description": "Optional: page with evidence/examples"
+    },
+    "verifyUrl": {
+      "type": "string",
+      "description": "Public URL where this badge can be verified"
+    },
+    "signature": {
+      "type": "object",
+      "description": "Optional: simple HMAC signature over critical fields",
+      "properties": {
+        "alg": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
