@@ -150,6 +150,27 @@
       ],
       "image": "assets/badges/sample.png",
       "verifyUrl": "https://anu1209823.github.io/digital-badge-system/site/#id=8751e1c1-c477-4303-ad62-6555de6919cb"
+    },
+    {
+      "id": "548e969c-7cf2-41b8-b300-eb398433c0a2",
+      "name": "BugBox – Certified Badge",
+      "description": "Completed BugBox badge design.",
+      "recipient": {
+        "name": "cat",
+        "email": "cat@example.com"
+      },
+      "issuer": {
+        "name": "Your Team / University",
+        "website": "https://example.edu/badges"
+      },
+      "issuedOn": "2025-08-31T12:53:50.049489+00:00",
+      "skills": [
+        "Figma",
+        "Colour theory",
+        "BugBox style"
+      ],
+      "image": "assets/badges/sample.png",
+      "verifyUrl": "http://localhost:8000/site/#id=548e969c-7cf2-41b8-b300-eb398433c0a2"
     }
   ]
 }
