@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BugBox Badge Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --primary:#FF5412; --secondary:#12BDFF; --ink:#0e1a2b; --ink2:#374357; --cream:#F7EFE5; --cream-stroke:#EADFCF; --deep:#0F3B63; }
+  *{box-sizing:border-box}
+  body{margin:0;padding:20px;font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f8fb;color:var(--ink)}
+  .shell{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:20px}
+  @media (max-width: 960px){ .shell{grid-template-columns:1fr} }
+  .card{background:#fff;border:1px solid #e8ecf2;border-radius:14px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.05)}
+  h2{margin:6px 0 12px 0}
+  label{font-size:12px;color:#58657a;font-weight:700}
+  input,textarea{width:100%;padding:10px 12px;border:1px solid #d9e1ea;border-radius:10px;font:600 14px/1.2 Montserrat,sans-serif}
+  textarea{min-height:80px;resize:vertical}
+  .row{display:grid;gap:10px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  button{background:#0F3B63;color:#fff;border:1px solid #0F3B63;padding:10px 12px;border-radius:10px;font-weight:800;cursor:pointer}
+  button.alt{background:#6b778c;border-color:#6b778c}
+  .muted{color:#6b778c;font-size:13px}
+  .error{color:#b00020}
+  .bb-wrap{width:480px;max-width:100%;margin:0 auto;filter:drop-shadow(0 18px 45px rgba(0,0,0,.12))}
+  .pent{position:relative;width:100%;padding-top:120%;background:var(--primary);clip-path:polygon(50% 0%, 95% 28%, 78% 92%, 22% 92%, 5% 28%);border-radius:14px}
+  .pill{position:absolute;left:50%;top:8%;transform:translateX(-50%);background:var(--secondary);color:#fff;font-weight:800;font-size:22px;padding:12px 22px;border-radius:14px}
+  .circ{position:absolute;left:50%;top:36%;width:66%;aspect-ratio:1/1;transform:translate(-50%,-50%);background:var(--deep);border-radius:50%;box-shadow:inset 0 0 0 16px rgba(255,255,255,.06)}
+  .circ::after{content:"";position:absolute;inset:8%;border-radius:50%;box-shadow:inset 0 0 0 10px rgba(255,255,255,.08)}
+  .arc{position:absolute;inset:0;pointer-events:none}
+  .arc span{position:absolute;left:50%;top:50%;transform-origin:0 0;color:#fff;font-weight:800}
+  .arc.t span{font-size:26px;letter-spacing:2px}
+  .arc.b span{font-size:18px;letter-spacing:2px}
+  .mark{position:absolute;left:50%;top:50%;transform:translate(-50%,-36%);width:78px;height:78px;background:var(--primary);border-radius:20px;box-shadow:0 0 0 10px rgba(255,255,255,.08)}
+  .plq{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:78%;background:var(--cream);border:4px solid var(--cream-stroke);border-radius:16px;padding:14px 16px;text-align:center}
+  .nm{font-weight:800;font-size:20px}
+  .div{height:0;border-top:3px solid #B44720;width:72%;margin:8px auto}
+  .pr{font-weight:700;font-size:13px;color:var(--ink2)}
+  .dt{font-weight:700;font-size:15px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="card" aria-live="polite">
+    <h2>Login (admins only)</h2>
+    <div class="row">
+      <label for="email">Email</label><input id="email" placeholder="you@bugbox…">
+      <label for="pass">Password</label><input id="pass" type="password" placeholder="••••••••">
+      <div class="actions">
+        <button id="btnLogin">Login</button>
+        <button id="btnLogout" class="alt">Logout</button>
+        <button id="btnPing" class="alt" title="Check backend health">Ping</button>
+      </div>
+      <div class="muted" id="loginMsg"></div>
+    </div>
+
+    <hr style="margin:18px 0; border:none; border-top:1px solid #e8ecf2">
+
+    <h2>Issue a Badge</h2>
+    <div class="row">
+      <label for="bName">Badge name</label><input id="bName" value="BugBox – Certified Badge">
+      <label for="rName">Recipient name</label><input id="rName" placeholder="Full name">
+      <label for="rEmail">Recipient email (optional)</label><input id="rEmail" placeholder="name@example.com">
+      <label for="skills">Skills (comma separated)</label><input id="skills" value="Figma, Colour theory, BugBox style">
+      <label for="desc">Description</label><textarea id="desc">Completed BugBox badge work.</textarea>
+      <label for="img">Image path (optional, in repo)</label><input id="img" value="assets/badges/sample.png">
+      <div class="actions">
+        <button id="btnPreview">Preview</button>
+        <button id="btnIssue">Issue & Publish</button>
+      </div>
+      <div id="msg" class="muted"></div>
+    </div>
+    <p class="muted">After “Issue & Publish”, the backend commits to <code>registry/</code> on GitHub and returns the verify link.</p>
+  </div>
+
+  <div class="card">
+    <h2>Preview</h2>
+    <div id="preview"></div>
+  </div>
+</div>
+
+<script>
+  // === SET THIS to your Vercel backend URL (no trailing slash) ===
+  // Example: 'https://bugbox-badge-backend.vercel.app'
+  const API_BASE = 'https://your-vercel-domain.vercel.app';
+
+  // helpers
+  const $ = id => document.getElementById(id);
+  function arc(el, text, r, a1, a2){
+    el.innerHTML = '';
+    const cx=el.clientWidth/2, cy=el.clientHeight/2;
+    const chars=[...text];
+    const s=a1*Math.PI/180, e=a2*Math.PI/180, step=(e-s)/Math.max(chars.length-1,1);
+    chars.forEach((ch,i)=>{ const ang=s+step*i; const x=cx+r*Math.cos(ang), y=cy*r*Math.sin(ang)/r + cy + r*Math.sin(ang) - cy; // keep y calc explicit
+      const span=document.createElement('span'); span.textContent=ch; const rot=ang+Math.PI/2;
+      span.style.transform=`translate(${cx+r*Math.cos(ang)}px,${cy+r*Math.sin(ang)}px) rotate(${rot}rad) translate(-50%,-50%)`;
+      el.appendChild(span);
+    });
+  }
+  function renderPreview(){
+    const nm = ($('rName').value||'').toUpperCase();
+    const title = ($('bName').value||'BUGBOX — CERTIFIED BADGE').toUpperCase();
+    const dt = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+    $('preview').innerHTML = `
+      <div class="bb-wrap">
+        <div class="pent">
+          <div class="pill">BUGBOX</div>
+          <div class="circ" id="c">
+            <div class="arc t" id="t"></div>
+            <div class="arc b" id="b"></div>
+            <div class="mark" aria-hidden="true"></div>
+          </div>
+          <div class="plq" aria-label="Badge plaque">
+            <div class="nm">${nm}</div>
+            <div class="div"></div>
+            <div class="pr">${title}</div>
+            <div class="dt">${dt}</div>
+          </div>
+        </div>
+      </div>`;
+    const box = $('c').getBoundingClientRect(); 
+    const size = Math.min(box.width, box.height); 
+    const r = size*0.40;
+    arc($('t'), 'BUGBOX', r, -160, -20);
+    arc($('b'), 'CERTIFIED BADGE', r, 200, 340);
+  }
+  renderPreview();
+
+  function showLoginMessage(msg, isError=false){
+    $('loginMsg').innerHTML = isError ? `<span class="error">${msg}</span>` : msg;
+  }
+
+  // auth
+  $('btnPing').onclick = async () => {
+    showLoginMessage('Pinging backend…');
+    try{
+      const res = await fetch(`${API_BASE}/api/ping`, { method:'GET', credentials:'include' });
+      const j = await res.json();
+      showLoginMessage(res.ok ? `Backend OK (${j.time})` : `Ping failed: ${j.error||res.status}`);
+    }catch(e){ showLoginMessage('Network error: '+e.message, true); }
+  };
+
+  $('btnLogin').onclick = async () => {
+    showLoginMessage('Signing in…');
+    try{
+      const res = await fetch(`${API_BASE}/api/login`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        credentials:'include',
+        body: JSON.stringify({ email: $('email').value, password: $('pass').value })
+      });
+      const j = await res.json();
+      if (!res.ok) return showLoginMessage(j.error || 'Login failed', true);
+      // login.js returns { ok:true, user:{ email, role } }
+      showLoginMessage(`Signed in as ${j.user?.email || 'admin'}`);
+    }catch(e){ showLoginMessage('Network error: '+e.message, true); }
+  };
+
+  $('btnLogout').onclick = async () => {
+    try { await fetch(`${API_BASE}/api/logout`, { method:'POST', credentials:'include' }); } catch(e){}
+    showLoginMessage('Signed out.');
+  };
+
+  // issue
+  $('btnPreview').onclick = renderPreview;
+  $('btnIssue').onclick = async () => {
+    $('msg').textContent = 'Issuing…';
+    const payload = {
+      name: $('bName').value,
+      recipientName: $('rName').value,
+      recipientEmail: $('rEmail').value,
+      skills: $('skills').value,
+      description: $('desc').value,
+      image: $('img').value
+    };
+    try{
+      const res = await fetch(`${API_BASE}/api/issue`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        credentials:'include',
+        body: JSON.stringify(payload)
+      });
+      const j = await res.json();
+      if (res.status === 401) {
+        $('msg').innerHTML = `<span class="error">Unauthorized. Please log in first.</span>`;
+        return;
+      }
+      if (!res.ok) {
+        $('msg').innerHTML = `<span class="error">Error: ${j.error || 'failed'}</span>`;
+        return;
+      }
+      $('msg').innerHTML = `Done ✅ &nbsp; ID: <code>${j.id}</code><br><a href="${j.verifyUrl}" target="_blank" rel="noopener">${j.verifyUrl}</a>`;
+    }catch(e){
+      $('msg').innerHTML = `<span class="error">Network error: ${e.message}</span>`;
+    }
+  };
+</script>
+</body>
+</html>

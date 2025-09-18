@@ -1,0 +1,21 @@
+{
+  "id": "8751e1c1-c477-4303-ad62-6555de6919cb",
+  "name": "BugBox – Certified Badge",
+  "description": "Completed BugBox badge design.",
+  "recipient": {
+    "name": "olive",
+    "email": "olive@example.com"
+  },
+  "issuer": {
+    "name": "Your Team / University",
+    "website": "https://example.edu/badges"
+  },
+  "issuedOn": "2025-08-30T15:54:29.191148+00:00",
+  "skills": [
+    "Figma",
+    "Colour theory",
+    "BugBox style"
+  ],
+  "image": "assets/badges/sample.png",
+  "verifyUrl": "https://anu1209823.github.io/digital-badge-system/site/#id=8751e1c1-c477-4303-ad62-6555de6919cb"
+}
