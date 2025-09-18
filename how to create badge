@@ -1,0 +1,8 @@
+
+//cd /d T:\digital-badge-system\digital-badge-system
+python scripts\issue_badge.py "BugBox – Certified Badge" "Anu Anu" "anushikachauhananu@yahoo.com" "assets/badges/sample.png" "Figma, Colour theory, BugBox style" "Completed BugBox badge work."
+git add -A
+git commit -m "Issued new BugBox badge"
+git push origin main
+//
+
